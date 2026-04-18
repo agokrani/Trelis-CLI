@@ -84,3 +84,21 @@ def test_upload_parquet_rejects_non_parquet(runner, mock_api: respx.Router, tmp_
     assert result.exit_code == 1
     err = json.loads(result.stderr)
     assert ".parquet" in err["error"]
+
+
+def test_warns_on_non_tsk_prefix(runner, mock_api: respx.Router, monkeypatch) -> None:
+    """Token without tsk_ prefix should warn on stderr in human mode."""
+    monkeypatch.setenv("TRELIS_API_KEY", "hf_wrong_token_kind")
+    mock_api.get("/api/v1/me/").mock(return_value=Response(200, json={"email": "a@b.com"}))
+    result = runner.invoke(app, ["auth", "whoami"])  # no --json
+    assert result.exit_code == 0, result.stderr
+    assert "does not start with 'tsk_'" in result.stderr
+
+
+def test_no_prefix_warning_in_json_mode(runner, mock_api: respx.Router, monkeypatch) -> None:
+    """JSON mode keeps stderr clean for agents."""
+    monkeypatch.setenv("TRELIS_API_KEY", "hf_wrong_token_kind")
+    mock_api.get("/api/v1/me/").mock(return_value=Response(200, json={"email": "a@b.com"}))
+    result = runner.invoke(app, ["--json", "auth", "whoami"])
+    assert result.exit_code == 0, result.stderr
+    assert result.stderr == ""
