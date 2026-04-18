@@ -1,0 +1,46 @@
+[project]
+name = "trelis-cli"
+version = "0.0.1"
+description = "Command-line interface for Trelis Studio (ASR/TTS training, evaluation, data prep)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Trelis" }]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13.7",
+    "httpx>=0.27",
+    "attrs>=23.2",
+    "python-dateutil>=2.9",
+    "keyring>=25.0",
+    "platformdirs>=4.2",
+]
+
+[project.scripts]
+trelis = "trelis_cli.__main__:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "respx>=0.21",
+    "syrupy>=4.6",
+    "ruff>=0.5",
+    "pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/trelis_cli", "src/trelis_sdk"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["src/trelis_sdk"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

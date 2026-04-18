@@ -1,0 +1,12 @@
+# Config for openapi-python-client. Applied during `make regen`.
+
+# Force the generated package name regardless of the OpenAPI document title.
+package_name_override: trelis_sdk
+
+# Don't fail the build on warnings — the upstream spec has many `schema: {}`
+# 200s which produce warnings but generate fine as `Any` returns.
+fail_on_warning: false
+
+# Use a single-quote style consistent with the rest of the project.
+post_hooks:
+  - "ruff format ."
