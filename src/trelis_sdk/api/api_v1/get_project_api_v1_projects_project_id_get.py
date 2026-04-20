@@ -62,7 +62,10 @@ def sync_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Get Project
 
-     Get project details.  Any member can view summary; only admins see credentials.
+     Get project details. Any member can view the summary; admins also see org/bucket/entity identifiers.
+
+    Accepts session cookie or `tsk_` API key. API-key callers can only fetch
+    the project their key is scoped to — other ids return 403.
 
     Args:
         project_id (str):
@@ -93,7 +96,10 @@ def sync(
 ) -> Any | HTTPValidationError | None:
     """Get Project
 
-     Get project details.  Any member can view summary; only admins see credentials.
+     Get project details. Any member can view the summary; admins also see org/bucket/entity identifiers.
+
+    Accepts session cookie or `tsk_` API key. API-key callers can only fetch
+    the project their key is scoped to — other ids return 403.
 
     Args:
         project_id (str):
@@ -119,7 +125,10 @@ async def asyncio_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Get Project
 
-     Get project details.  Any member can view summary; only admins see credentials.
+     Get project details. Any member can view the summary; admins also see org/bucket/entity identifiers.
+
+    Accepts session cookie or `tsk_` API key. API-key callers can only fetch
+    the project their key is scoped to — other ids return 403.
 
     Args:
         project_id (str):
@@ -148,7 +157,10 @@ async def asyncio(
 ) -> Any | HTTPValidationError | None:
     """Get Project
 
-     Get project details.  Any member can view summary; only admins see credentials.
+     Get project details. Any member can view the summary; admins also see org/bucket/entity identifiers.
+
+    Accepts session cookie or `tsk_` API key. API-key callers can only fetch
+    the project their key is scoped to — other ids return 403.
 
     Args:
         project_id (str):

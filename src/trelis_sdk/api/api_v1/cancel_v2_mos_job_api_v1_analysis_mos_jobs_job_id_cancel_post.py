@@ -9,31 +9,20 @@ from ...types import Response, UNSET
 from ... import errors
 
 from ...models.http_validation_error import HTTPValidationError
-from ...models.update_member_role_request import UpdateMemberRoleRequest
 from typing import cast
 
 
 def _get_kwargs(
-    project_id: str,
-    member_id: str,
-    *,
-    body: UpdateMemberRoleRequest,
+    job_id: str,
 ) -> dict[str, Any]:
-    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "patch",
-        "url": "/api/v1/projects/{project_id}/members/{member_id}".format(
-            project_id=quote(str(project_id), safe=""),
-            member_id=quote(str(member_id), safe=""),
+        "method": "post",
+        "url": "/api/v1/analysis/mos/jobs/{job_id}/cancel".format(
+            job_id=quote(str(job_id), safe=""),
         ),
     }
 
-    _kwargs["json"] = body.to_dict()
-
-    headers["Content-Type"] = "application/json"
-
-    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -67,20 +56,16 @@ def _build_response(
 
 
 def sync_detailed(
-    project_id: str,
-    member_id: str,
+    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-    body: UpdateMemberRoleRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Update Member Role
+    """Cancel V2 Mos Job
 
-     Update a member's role.  Admin only.  Cannot demote the project owner.
+     Cancel a running v2 MOS analysis job.
 
     Args:
-        project_id (str):
-        member_id (str):
-        body (UpdateMemberRoleRequest):
+        job_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -91,9 +76,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        project_id=project_id,
-        member_id=member_id,
-        body=body,
+        job_id=job_id,
     )
 
     response = client.get_httpx_client().request(
@@ -104,20 +87,16 @@ def sync_detailed(
 
 
 def sync(
-    project_id: str,
-    member_id: str,
+    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-    body: UpdateMemberRoleRequest,
 ) -> Any | HTTPValidationError | None:
-    """Update Member Role
+    """Cancel V2 Mos Job
 
-     Update a member's role.  Admin only.  Cannot demote the project owner.
+     Cancel a running v2 MOS analysis job.
 
     Args:
-        project_id (str):
-        member_id (str):
-        body (UpdateMemberRoleRequest):
+        job_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -128,28 +107,22 @@ def sync(
     """
 
     return sync_detailed(
-        project_id=project_id,
-        member_id=member_id,
+        job_id=job_id,
         client=client,
-        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    project_id: str,
-    member_id: str,
+    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-    body: UpdateMemberRoleRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Update Member Role
+    """Cancel V2 Mos Job
 
-     Update a member's role.  Admin only.  Cannot demote the project owner.
+     Cancel a running v2 MOS analysis job.
 
     Args:
-        project_id (str):
-        member_id (str):
-        body (UpdateMemberRoleRequest):
+        job_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -160,9 +133,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        project_id=project_id,
-        member_id=member_id,
-        body=body,
+        job_id=job_id,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -171,20 +142,16 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    project_id: str,
-    member_id: str,
+    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-    body: UpdateMemberRoleRequest,
 ) -> Any | HTTPValidationError | None:
-    """Update Member Role
+    """Cancel V2 Mos Job
 
-     Update a member's role.  Admin only.  Cannot demote the project owner.
+     Cancel a running v2 MOS analysis job.
 
     Args:
-        project_id (str):
-        member_id (str):
-        body (UpdateMemberRoleRequest):
+        job_id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -196,9 +163,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            project_id=project_id,
-            member_id=member_id,
+            job_id=job_id,
             client=client,
-            body=body,
         )
     ).parsed

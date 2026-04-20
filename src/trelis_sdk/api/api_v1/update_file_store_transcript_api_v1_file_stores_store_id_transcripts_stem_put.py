@@ -8,22 +8,24 @@ from ...client import AuthenticatedClient, Client
 from ...types import Response, UNSET
 from ... import errors
 
-from ...models.file_store_draft_transcribe_request import FileStoreDraftTranscribeRequest
+from ...models.file_store_transcript_update_request import FileStoreTranscriptUpdateRequest
 from ...models.http_validation_error import HTTPValidationError
 from typing import cast
 
 
 def _get_kwargs(
     store_id: str,
+    stem: str,
     *,
-    body: FileStoreDraftTranscribeRequest,
+    body: FileStoreTranscriptUpdateRequest,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/api/v1/file-stores/{store_id}/draft-transcribe".format(
+        "method": "put",
+        "url": "/api/v1/file-stores/{store_id}/transcripts/{stem}".format(
             store_id=quote(str(store_id), safe=""),
+            stem=quote(str(stem), safe=""),
         ),
     }
 
@@ -66,26 +68,28 @@ def _build_response(
 
 def sync_detailed(
     store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-    body: FileStoreDraftTranscribeRequest,
+    body: FileStoreTranscriptUpdateRequest,
 ) -> Response[Any | HTTPValidationError]:
-    r"""Draft Transcribe File Store
+    """Save edited transcript content
 
-     Transcribe audio files in a FileStore using ASR.
-
-    Input FileStore must be S3-backed (source: upload). Creates a new output
-    FileStore (source: draft_transcribe, storage_backend: s3) containing
-    audio + VTT file pairs ready for `POST /file-stores/{id}/process`.
-
-    Use `model_id: \"router\"` + `router_model` for CPU-based transcription
-    via the Trelis Router, or a Studio model ID for GPU transcription.
-
-    Poll `GET /api/v1/data-prep/jobs/{job_id}` for progress.
+     Persist an edited transcript. Validates segments parse, gates on
+    content type, deletes any stale sibling extension, and compensates on
+    soft-delete races.
 
     Args:
         store_id (str):
-        body (FileStoreDraftTranscribeRequest):
+        stem (str):
+        body (FileStoreTranscriptUpdateRequest): Editor-submitted transcript content for a given
+            stem.
+
+            ``transcript_type`` selects the target file extension + Content-Type:
+            ``vtt`` → ``{stem}.vtt`` (text/vtt), ``srt`` → ``{stem}.srt`` (text/plain),
+            ``txt`` → ``{stem}.txt`` (text/plain). Sibling extensions for the same
+            stem are cleaned up on successful PUT so exactly one transcript per stem
+            remains on disk.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -97,6 +101,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         store_id=store_id,
+        stem=stem,
         body=body,
     )
 
@@ -109,26 +114,28 @@ def sync_detailed(
 
 def sync(
     store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-    body: FileStoreDraftTranscribeRequest,
+    body: FileStoreTranscriptUpdateRequest,
 ) -> Any | HTTPValidationError | None:
-    r"""Draft Transcribe File Store
+    """Save edited transcript content
 
-     Transcribe audio files in a FileStore using ASR.
-
-    Input FileStore must be S3-backed (source: upload). Creates a new output
-    FileStore (source: draft_transcribe, storage_backend: s3) containing
-    audio + VTT file pairs ready for `POST /file-stores/{id}/process`.
-
-    Use `model_id: \"router\"` + `router_model` for CPU-based transcription
-    via the Trelis Router, or a Studio model ID for GPU transcription.
-
-    Poll `GET /api/v1/data-prep/jobs/{job_id}` for progress.
+     Persist an edited transcript. Validates segments parse, gates on
+    content type, deletes any stale sibling extension, and compensates on
+    soft-delete races.
 
     Args:
         store_id (str):
-        body (FileStoreDraftTranscribeRequest):
+        stem (str):
+        body (FileStoreTranscriptUpdateRequest): Editor-submitted transcript content for a given
+            stem.
+
+            ``transcript_type`` selects the target file extension + Content-Type:
+            ``vtt`` → ``{stem}.vtt`` (text/vtt), ``srt`` → ``{stem}.srt`` (text/plain),
+            ``txt`` → ``{stem}.txt`` (text/plain). Sibling extensions for the same
+            stem are cleaned up on successful PUT so exactly one transcript per stem
+            remains on disk.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -140,6 +147,7 @@ def sync(
 
     return sync_detailed(
         store_id=store_id,
+        stem=stem,
         client=client,
         body=body,
     ).parsed
@@ -147,26 +155,28 @@ def sync(
 
 async def asyncio_detailed(
     store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-    body: FileStoreDraftTranscribeRequest,
+    body: FileStoreTranscriptUpdateRequest,
 ) -> Response[Any | HTTPValidationError]:
-    r"""Draft Transcribe File Store
+    """Save edited transcript content
 
-     Transcribe audio files in a FileStore using ASR.
-
-    Input FileStore must be S3-backed (source: upload). Creates a new output
-    FileStore (source: draft_transcribe, storage_backend: s3) containing
-    audio + VTT file pairs ready for `POST /file-stores/{id}/process`.
-
-    Use `model_id: \"router\"` + `router_model` for CPU-based transcription
-    via the Trelis Router, or a Studio model ID for GPU transcription.
-
-    Poll `GET /api/v1/data-prep/jobs/{job_id}` for progress.
+     Persist an edited transcript. Validates segments parse, gates on
+    content type, deletes any stale sibling extension, and compensates on
+    soft-delete races.
 
     Args:
         store_id (str):
-        body (FileStoreDraftTranscribeRequest):
+        stem (str):
+        body (FileStoreTranscriptUpdateRequest): Editor-submitted transcript content for a given
+            stem.
+
+            ``transcript_type`` selects the target file extension + Content-Type:
+            ``vtt`` → ``{stem}.vtt`` (text/vtt), ``srt`` → ``{stem}.srt`` (text/plain),
+            ``txt`` → ``{stem}.txt`` (text/plain). Sibling extensions for the same
+            stem are cleaned up on successful PUT so exactly one transcript per stem
+            remains on disk.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -178,6 +188,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         store_id=store_id,
+        stem=stem,
         body=body,
     )
 
@@ -188,26 +199,28 @@ async def asyncio_detailed(
 
 async def asyncio(
     store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-    body: FileStoreDraftTranscribeRequest,
+    body: FileStoreTranscriptUpdateRequest,
 ) -> Any | HTTPValidationError | None:
-    r"""Draft Transcribe File Store
+    """Save edited transcript content
 
-     Transcribe audio files in a FileStore using ASR.
-
-    Input FileStore must be S3-backed (source: upload). Creates a new output
-    FileStore (source: draft_transcribe, storage_backend: s3) containing
-    audio + VTT file pairs ready for `POST /file-stores/{id}/process`.
-
-    Use `model_id: \"router\"` + `router_model` for CPU-based transcription
-    via the Trelis Router, or a Studio model ID for GPU transcription.
-
-    Poll `GET /api/v1/data-prep/jobs/{job_id}` for progress.
+     Persist an edited transcript. Validates segments parse, gates on
+    content type, deletes any stale sibling extension, and compensates on
+    soft-delete races.
 
     Args:
         store_id (str):
-        body (FileStoreDraftTranscribeRequest):
+        stem (str):
+        body (FileStoreTranscriptUpdateRequest): Editor-submitted transcript content for a given
+            stem.
+
+            ``transcript_type`` selects the target file extension + Content-Type:
+            ``vtt`` → ``{stem}.vtt`` (text/vtt), ``srt`` → ``{stem}.srt`` (text/plain),
+            ``txt`` → ``{stem}.txt`` (text/plain). Sibling extensions for the same
+            stem are cleaned up on successful PUT so exactly one transcript per stem
+            remains on disk.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -220,6 +233,7 @@ async def asyncio(
     return (
         await asyncio_detailed(
             store_id=store_id,
+            stem=stem,
             client=client,
             body=body,
         )

@@ -8,91 +8,80 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-from ..models.training_request_lora_target import TrainingRequestLoraTarget
+from ..models.training_asrv2_request_lora_target import TrainingASRV2RequestLoraTarget
 from ..types import UNSET, Unset
 from typing import cast
+from typing import Literal, cast
 
 if TYPE_CHECKING:
     from ..models.dataset_spec import DatasetSpec
 
 
-T = TypeVar("T", bound="TrainingRequest")
+T = TypeVar("T", bound="TrainingASRV2Request")
 
 
 @_attrs_define
-class TrainingRequest:
-    """Request to start a training job.
+class TrainingASRV2Request:
+    """v2 ASR training sub-model. All fields mirror the legacy
+    `TrainingRequest` one-for-one so the adapter is a ``.model_dump()``
+    round-trip — adding / renaming a field on either side requires the
+    matching change here.
 
-    Attributes:
-        base_model (str): HuggingFace model ID for the base model to fine-tune. Supported model families: Whisper
-            (openai/whisper-tiny, openai/whisper-base, openai/whisper-small, openai/whisper-medium, openai/whisper-
-            large-v3-turbo, openai/whisper-large-v3), Moonshine (UsefulSensors/moonshine-tiny, UsefulSensors/moonshine-base,
-            plus language-specific variants like moonshine-tiny-ar, moonshine-base-zh, etc.), Qwen ASR (Qwen/Qwen3-ASR-0.6B,
-            Qwen/Qwen3-ASR-1.7B), Voxtral (mistralai/Voxtral-Mini-3B-2507), Parakeet (nvidia/parakeet-tdt-0.6b-v3). You can
-            also pass a fine-tuned model ID from any of these families.
-        base_model_file_store_id (None | str | Unset): FileStore UUID containing model weights (S3). Mutually exclusive
-            with base_model as HF ID.
-        train_datasets (list[DatasetSpec] | None | Unset): List of training datasets (recommended). Use this OR
-            train_dataset, not both.
-        train_dataset (None | str | Unset): Single training dataset ID (legacy). Prefer train_datasets for new
-            integrations.
-        train_split (str | Unset): Dataset split to use for training. Default: 'train'.
-        train_dataset_config (None | str | Unset): Dataset config name, for datasets with multiple subsets (e.g. 'en_us'
-            in google/fleurs).
-        validation_dataset (None | str | Unset): Validation dataset ID. If omitted, a portion of the training data is
-            used.
-        validation_split (str | Unset): Dataset split to use for validation. Default: 'validation'.
-        validation_dataset_config (None | str | Unset): Config name for the validation dataset, if it has multiple
-            subsets.
-        output_org (None | str | Unset): HuggingFace org/user to push the trained model to, e.g. 'my-org'. Required if
-            push_to_hub is true.
-        output_model_name (None | str | Unset): Name for the output model repo, e.g. 'whisper-large-v3-turbo-my-data'.
-            Auto-generated if omitted.
-        push_to_hub (bool | Unset): Push the trained model to HuggingFace Hub when training completes. Default: True.
-        batch_size (int | None | Unset): Global batch size (total samples per optimizer step across all GPUs). Must be a
-            power of 2. Leave blank to auto-recommend based on dataset size (recommended).
-        gradient_accumulation_steps (int | None | Unset): Gradient accumulation steps. Auto-derived from global batch
-            size and GPU count. Only provide to override.
-        learning_rate (float | None | Unset): Learning rate. Leave blank to auto-recommend based on dataset size
-            (recommended).
-        lr_scheduler (str | Unset): Learning rate scheduler: 'constant_with_warmup' or 'cosine'. Default:
-            'constant_with_warmup'.
-        epochs (int | None | Unset): Number of training epochs. Leave blank to auto-recommend based on dataset size
-            (recommended).
-        lora_rank (int | Unset): LoRA rank. Higher values increase model capacity but use more memory. Default: 32.
-        lora_alpha (int | Unset): LoRA alpha scaling factor. Default: 16.
-        use_rslora (bool | Unset): Use Rank-Stabilized LoRA (RSLoRA) for more stable training. Default: True.
-        lora_target (TrainingRequestLoraTarget | Unset): Which modules to apply LoRA to: 'both' (encoder + decoder) or
-            'decoder_only'. Default: TrainingRequestLoraTarget.BOTH.
-        train_embeddings (bool | Unset): Whether to train input/output embedding layers (increases memory usage).
-            Default: False.
-        private (bool | Unset): Deprecated — always True. Repos are always created as private. Default: True.
-        enable_timestamps (bool | Unset): Enable timestamp token training. When enabled, 50% of training data uses
-            timestamp tokens. Default: False.
-        wandb_entity (None | str | Unset): W&B team name (not organization). Uses default team if omitted.
-        wandb_project (None | str | Unset): W&B project name.
-        wandb_run_name (None | str | Unset): W&B run name. Auto-generated if omitted.
-        max_validation_rows (int | Unset): Max validation samples for evaluation during training (baseline, periodic,
-            final) Default: 500.
-        language (str | Unset): Full language name (e.g., 'english', 'greek'). Set to 'multilingual' to read per-sample
-            language from the dataset's 'language' column (ISO 639-1 codes like 'en', 'el'). When 'multilingual' is set,
-            samples without a language column are skipped. When set to a specific language (default), the dataset's language
-            column is ignored. 'auto' is not supported for training. Default: 'english'.
-        normalizer (str | Unset): Text normalizer for WER/CER computation during training evaluation. Options: 'auto'
-            (select based on language — e.g., Greek normalizer for Greek), 'generic' (Unicode-aware: lowercase, strip
-            punctuation, preserve all scripts), 'whisper-english' (aggressive English normalizer — numbers, contractions,
-            fillers, British spelling), 'none' (no normalization — compare raw text), or a language name (e.g., 'greek').
-            Default: 'auto'.
-        max_train_samples (int | None | Unset): Limit training to a random subset of N samples. Useful for quick
-            experimentation.
-        max_grad_norm (float | Unset): Gradient-clipping threshold. 0 = disabled, 1.0 = standard. Threaded through to
-            Modal training scripts via Job.config. Default: 1.0.
+    Input source rule (enforced by model validator): exactly one of
+    ``train_datasets`` / ``train_dataset`` / ``file_store_id`` at the
+    top level. The top-level ``file_store_id`` is a convenience
+    shortcut for single-FileStore runs — callers who need per-row
+    options (``config``, ``samples_per_epoch``, mixed HF+FileStore
+    sources) must use the ``train_datasets`` list. ``base_model_file_store_id``
+    is orthogonal — it's a model-weights FileStore, not a dataset
+    input, and is not subject to §3.2 dataset-contract validation.
+
+        Attributes:
+            job_type (Literal['asr']):
+            base_model (str):
+            base_model_file_store_id (None | str | Unset):
+            train_datasets (list[DatasetSpec] | None | Unset):
+            train_dataset (None | str | Unset):
+            file_store_id (None | str | Unset): FileStore UUID holding a chunked / transcribed / generated-audio dataset. v2
+                contract validation (§3.2) runs before the Job is minted. Shortcut for single-dataset runs — callers who need
+                per-row `samples_per_epoch` / `config` or multiple datasets must use `train_datasets`. Mutually exclusive with
+                `train_datasets` and `train_dataset`.
+            train_split (str | Unset):  Default: 'train'.
+            train_dataset_config (None | str | Unset):
+            validation_dataset (None | str | Unset):
+            validation_split (str | Unset):  Default: 'validation'.
+            validation_dataset_config (None | str | Unset):
+            output_org (None | str | Unset):
+            output_model_name (None | str | Unset):
+            push_to_hub (bool | Unset):  Default: True.
+            batch_size (int | None | Unset):
+            gradient_accumulation_steps (int | None | Unset):
+            learning_rate (float | None | Unset):
+            lr_scheduler (str | Unset):  Default: 'constant_with_warmup'.
+            epochs (int | None | Unset):
+            lora_rank (int | Unset):  Default: 32.
+            lora_alpha (int | Unset):  Default: 16.
+            use_rslora (bool | Unset):  Default: True.
+            lora_target (TrainingASRV2RequestLoraTarget | Unset):  Default: TrainingASRV2RequestLoraTarget.BOTH.
+            train_embeddings (bool | Unset):  Default: False.
+            private (bool | Unset):  Default: True.
+            enable_timestamps (bool | Unset):  Default: False.
+            wandb_entity (None | str | Unset):
+            wandb_project (None | str | Unset):
+            wandb_run_name (None | str | Unset):
+            max_validation_rows (int | Unset):  Default: 500.
+            language (str | Unset):  Default: 'english'.
+            normalizer (str | Unset):  Default: 'auto'.
+            max_train_samples (int | None | Unset):
+            max_grad_norm (float | Unset):  Default: 1.0.
     """
 
+    job_type: Literal["asr"]
     base_model: str
     base_model_file_store_id: None | str | Unset = UNSET
     train_datasets: list[DatasetSpec] | None | Unset = UNSET
     train_dataset: None | str | Unset = UNSET
+    file_store_id: None | str | Unset = UNSET
     train_split: str | Unset = "train"
     train_dataset_config: None | str | Unset = UNSET
     validation_dataset: None | str | Unset = UNSET
@@ -109,7 +98,7 @@ class TrainingRequest:
     lora_rank: int | Unset = 32
     lora_alpha: int | Unset = 16
     use_rslora: bool | Unset = True
-    lora_target: TrainingRequestLoraTarget | Unset = TrainingRequestLoraTarget.BOTH
+    lora_target: TrainingASRV2RequestLoraTarget | Unset = TrainingASRV2RequestLoraTarget.BOTH
     train_embeddings: bool | Unset = False
     private: bool | Unset = True
     enable_timestamps: bool | Unset = False
@@ -124,6 +113,8 @@ class TrainingRequest:
 
     def to_dict(self) -> dict[str, Any]:
         from ..models.dataset_spec import DatasetSpec
+
+        job_type = self.job_type
 
         base_model = self.base_model
 
@@ -150,6 +141,12 @@ class TrainingRequest:
             train_dataset = UNSET
         else:
             train_dataset = self.train_dataset
+
+        file_store_id: None | str | Unset
+        if isinstance(self.file_store_id, Unset):
+            file_store_id = UNSET
+        else:
+            file_store_id = self.file_store_id
 
         train_split = self.train_split
 
@@ -265,6 +262,7 @@ class TrainingRequest:
 
         field_dict.update(
             {
+                "job_type": job_type,
                 "base_model": base_model,
             }
         )
@@ -274,6 +272,8 @@ class TrainingRequest:
             field_dict["train_datasets"] = train_datasets
         if train_dataset is not UNSET:
             field_dict["train_dataset"] = train_dataset
+        if file_store_id is not UNSET:
+            field_dict["file_store_id"] = file_store_id
         if train_split is not UNSET:
             field_dict["train_split"] = train_split
         if train_dataset_config is not UNSET:
@@ -338,6 +338,10 @@ class TrainingRequest:
         from ..models.dataset_spec import DatasetSpec
 
         d = dict(src_dict)
+        job_type = cast(Literal["asr"], d.pop("job_type"))
+        if job_type != "asr":
+            raise ValueError(f"job_type must match const 'asr', got '{job_type}'")
+
         base_model = d.pop("base_model")
 
         def _parse_base_model_file_store_id(data: object) -> None | str | Unset:
@@ -383,6 +387,15 @@ class TrainingRequest:
             return cast(None | str | Unset, data)
 
         train_dataset = _parse_train_dataset(d.pop("train_dataset", UNSET))
+
+        def _parse_file_store_id(data: object) -> None | str | Unset:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(None | str | Unset, data)
+
+        file_store_id = _parse_file_store_id(d.pop("file_store_id", UNSET))
 
         train_split = d.pop("train_split", UNSET)
 
@@ -484,11 +497,11 @@ class TrainingRequest:
         use_rslora = d.pop("use_rslora", UNSET)
 
         _lora_target = d.pop("lora_target", UNSET)
-        lora_target: TrainingRequestLoraTarget | Unset
+        lora_target: TrainingASRV2RequestLoraTarget | Unset
         if isinstance(_lora_target, Unset):
             lora_target = UNSET
         else:
-            lora_target = TrainingRequestLoraTarget(_lora_target)
+            lora_target = TrainingASRV2RequestLoraTarget(_lora_target)
 
         train_embeddings = d.pop("train_embeddings", UNSET)
 
@@ -540,11 +553,13 @@ class TrainingRequest:
 
         max_grad_norm = d.pop("max_grad_norm", UNSET)
 
-        training_request = cls(
+        training_asrv2_request = cls(
+            job_type=job_type,
             base_model=base_model,
             base_model_file_store_id=base_model_file_store_id,
             train_datasets=train_datasets,
             train_dataset=train_dataset,
+            file_store_id=file_store_id,
             train_split=train_split,
             train_dataset_config=train_dataset_config,
             validation_dataset=validation_dataset,
@@ -575,4 +590,4 @@ class TrainingRequest:
             max_grad_norm=max_grad_norm,
         )
 
-        return training_request
+        return training_asrv2_request

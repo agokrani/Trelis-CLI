@@ -39,12 +39,18 @@ def main(
 
 # Resource sub-apps.
 from .commands import auth as auth_cmd  # noqa: E402
+from .commands import billing as billing_cmd  # noqa: E402
 from .commands import file_stores as file_stores_cmd  # noqa: E402
+from .commands import keys as keys_cmd  # noqa: E402
 from .commands import models as models_cmd  # noqa: E402
+from .commands import projects as projects_cmd  # noqa: E402
 
 app.add_typer(auth_cmd.app)
+app.add_typer(billing_cmd.app, name="billing")
 app.add_typer(file_stores_cmd.app, name="file-stores")
+app.add_typer(keys_cmd.app, name="keys")
 app.add_typer(models_cmd.app, name="models")
+app.add_typer(projects_cmd.app, name="projects")
 
 
 if __name__ == "__main__":

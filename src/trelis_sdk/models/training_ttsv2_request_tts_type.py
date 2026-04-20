@@ -1,8 +1,7 @@
 from enum import Enum
 
 
-class FileStoreTTSRequestEngineType0(str, Enum):
-    KOKORO = "kokoro"
+class TrainingTTSV2RequestTtsType(str, Enum):
     ORPHEUS = "orpheus"
     PIPER = "piper"
 

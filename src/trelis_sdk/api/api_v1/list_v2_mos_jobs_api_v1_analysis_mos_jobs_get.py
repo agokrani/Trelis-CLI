@@ -9,18 +9,33 @@ from ...types import Response, UNSET
 from ... import errors
 
 from ...models.http_validation_error import HTTPValidationError
+from ...types import UNSET, Unset
 from typing import cast
 
 
 def _get_kwargs(
-    job_id: str,
+    *,
+    limit: int | Unset = 20,
+    status: None | str | Unset = UNSET,
 ) -> dict[str, Any]:
 
+    params: dict[str, Any] = {}
+
+    params["limit"] = limit
+
+    json_status: None | str | Unset
+    if isinstance(status, Unset):
+        json_status = UNSET
+    else:
+        json_status = status
+    params["status"] = json_status
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/api/v1/filtering/jobs/{job_id}/stop".format(
-            job_id=quote(str(job_id), safe=""),
-        ),
+        "method": "get",
+        "url": "/api/v1/analysis/mos/jobs",
+        "params": params,
     }
 
     return _kwargs
@@ -56,18 +71,18 @@ def _build_response(
 
 
 def sync_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    limit: int | Unset = 20,
+    status: None | str | Unset = UNSET,
 ) -> Response[Any | HTTPValidationError]:
-    """Stop Filtering Job
+    """List V2 Mos Jobs
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     List v2 MOS analysis jobs for the current user.
 
     Args:
-        job_id (str):
+        limit (int | Unset):  Default: 20.
+        status (None | str | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -78,7 +93,8 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        limit=limit,
+        status=status,
     )
 
     response = client.get_httpx_client().request(
@@ -89,18 +105,18 @@ def sync_detailed(
 
 
 def sync(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    limit: int | Unset = 20,
+    status: None | str | Unset = UNSET,
 ) -> Any | HTTPValidationError | None:
-    """Stop Filtering Job
+    """List V2 Mos Jobs
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     List v2 MOS analysis jobs for the current user.
 
     Args:
-        job_id (str):
+        limit (int | Unset):  Default: 20.
+        status (None | str | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -111,24 +127,25 @@ def sync(
     """
 
     return sync_detailed(
-        job_id=job_id,
         client=client,
+        limit=limit,
+        status=status,
     ).parsed
 
 
 async def asyncio_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    limit: int | Unset = 20,
+    status: None | str | Unset = UNSET,
 ) -> Response[Any | HTTPValidationError]:
-    """Stop Filtering Job
+    """List V2 Mos Jobs
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     List v2 MOS analysis jobs for the current user.
 
     Args:
-        job_id (str):
+        limit (int | Unset):  Default: 20.
+        status (None | str | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -139,7 +156,8 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        limit=limit,
+        status=status,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -148,18 +166,18 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    limit: int | Unset = 20,
+    status: None | str | Unset = UNSET,
 ) -> Any | HTTPValidationError | None:
-    """Stop Filtering Job
+    """List V2 Mos Jobs
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     List v2 MOS analysis jobs for the current user.
 
     Args:
-        job_id (str):
+        limit (int | Unset):  Default: 20.
+        status (None | str | Unset):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -171,7 +189,8 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            job_id=job_id,
             client=client,
+            limit=limit,
+            status=status,
         )
     ).parsed

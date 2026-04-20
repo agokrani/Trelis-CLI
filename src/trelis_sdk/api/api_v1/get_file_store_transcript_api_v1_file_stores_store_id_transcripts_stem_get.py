@@ -8,18 +8,21 @@ from ...client import AuthenticatedClient, Client
 from ...types import Response, UNSET
 from ... import errors
 
+from ...models.file_store_transcript_response import FileStoreTranscriptResponse
 from ...models.http_validation_error import HTTPValidationError
 from typing import cast
 
 
 def _get_kwargs(
-    project_id: str,
+    store_id: str,
+    stem: str,
 ) -> dict[str, Any]:
 
     _kwargs: dict[str, Any] = {
-        "method": "delete",
-        "url": "/api/v1/projects/{project_id}".format(
-            project_id=quote(str(project_id), safe=""),
+        "method": "get",
+        "url": "/api/v1/file-stores/{store_id}/transcripts/{stem}".format(
+            store_id=quote(str(store_id), safe=""),
+            stem=quote(str(stem), safe=""),
         ),
     }
 
@@ -28,9 +31,10 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Any | HTTPValidationError | None:
+) -> FileStoreTranscriptResponse | HTTPValidationError | None:
     if response.status_code == 200:
-        response_200 = response.json()
+        response_200 = FileStoreTranscriptResponse.from_dict(response.json())
+
         return response_200
 
     if response.status_code == 422:
@@ -46,7 +50,7 @@ def _parse_response(
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[Any | HTTPValidationError]:
+) -> Response[FileStoreTranscriptResponse | HTTPValidationError]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -56,27 +60,31 @@ def _build_response(
 
 
 def sync_detailed(
-    project_id: str,
+    store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Any | HTTPValidationError]:
-    """Delete Project
+) -> Response[FileStoreTranscriptResponse | HTTPValidationError]:
+    """Get transcript content + paired audio URL for a file
 
-     Delete a project.  Owner only.  This does NOT delete associated jobs/filestores.
+     Return the VTT/TXT body paired with a stem, plus a short-lived audio
+    GET URL the editor can point an ``<audio>`` element at.
 
     Args:
-        project_id (str):
+        store_id (str):
+        stem (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any | HTTPValidationError]
+        Response[FileStoreTranscriptResponse | HTTPValidationError]
     """
 
     kwargs = _get_kwargs(
-        project_id=project_id,
+        store_id=store_id,
+        stem=stem,
     )
 
     response = client.get_httpx_client().request(
@@ -87,53 +95,61 @@ def sync_detailed(
 
 
 def sync(
-    project_id: str,
+    store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Any | HTTPValidationError | None:
-    """Delete Project
+) -> FileStoreTranscriptResponse | HTTPValidationError | None:
+    """Get transcript content + paired audio URL for a file
 
-     Delete a project.  Owner only.  This does NOT delete associated jobs/filestores.
+     Return the VTT/TXT body paired with a stem, plus a short-lived audio
+    GET URL the editor can point an ``<audio>`` element at.
 
     Args:
-        project_id (str):
+        store_id (str):
+        stem (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Any | HTTPValidationError
+        FileStoreTranscriptResponse | HTTPValidationError
     """
 
     return sync_detailed(
-        project_id=project_id,
+        store_id=store_id,
+        stem=stem,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    project_id: str,
+    store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Any | HTTPValidationError]:
-    """Delete Project
+) -> Response[FileStoreTranscriptResponse | HTTPValidationError]:
+    """Get transcript content + paired audio URL for a file
 
-     Delete a project.  Owner only.  This does NOT delete associated jobs/filestores.
+     Return the VTT/TXT body paired with a stem, plus a short-lived audio
+    GET URL the editor can point an ``<audio>`` element at.
 
     Args:
-        project_id (str):
+        store_id (str):
+        stem (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any | HTTPValidationError]
+        Response[FileStoreTranscriptResponse | HTTPValidationError]
     """
 
     kwargs = _get_kwargs(
-        project_id=project_id,
+        store_id=store_id,
+        stem=stem,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -142,28 +158,32 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    project_id: str,
+    store_id: str,
+    stem: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Any | HTTPValidationError | None:
-    """Delete Project
+) -> FileStoreTranscriptResponse | HTTPValidationError | None:
+    """Get transcript content + paired audio URL for a file
 
-     Delete a project.  Owner only.  This does NOT delete associated jobs/filestores.
+     Return the VTT/TXT body paired with a stem, plus a short-lived audio
+    GET URL the editor can point an ``<audio>`` element at.
 
     Args:
-        project_id (str):
+        store_id (str):
+        stem (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Any | HTTPValidationError
+        FileStoreTranscriptResponse | HTTPValidationError
     """
 
     return (
         await asyncio_detailed(
-            project_id=project_id,
+            store_id=store_id,
+            stem=stem,
             client=client,
         )
     ).parsed

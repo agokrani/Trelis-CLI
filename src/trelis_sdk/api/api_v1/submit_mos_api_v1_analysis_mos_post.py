@@ -9,20 +9,26 @@ from ...types import Response, UNSET
 from ... import errors
 
 from ...models.http_validation_error import HTTPValidationError
+from ...models.mos_analysis_request import MOSAnalysisRequest
 from typing import cast
 
 
 def _get_kwargs(
-    job_id: str,
+    *,
+    body: MOSAnalysisRequest,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "delete",
-        "url": "/api/v1/filtering/jobs/{job_id}".format(
-            job_id=quote(str(job_id), safe=""),
-        ),
+        "method": "post",
+        "url": "/api/v1/analysis/mos",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -56,14 +62,25 @@ def _build_response(
 
 
 def sync_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: MOSAnalysisRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Delete Filtering Job Not Supported
+    """Submit a v2 MOS analysis job
+
+     Submit a v2 MOS analysis job (§7.3).
+
+    Accepts FileStore or HF dataset. Validates against the `mos`
+    service contract (§3.2.2). Adds a `mos` column to the scored
+    dataset — pass-through on shape.
+
+    The Modal backend is unchanged from the legacy endpoint
+    (`remote/mos.py::MOS.run`); only the
+    request envelope is v2-shaped (contract validation + FileStore
+    parquet resolution).
 
     Args:
-        job_id (str):
+        body (MOSAnalysisRequest): v2 MOS request — FileStore or HF dataset, contract-validated.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -74,7 +91,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -85,14 +102,25 @@ def sync_detailed(
 
 
 def sync(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: MOSAnalysisRequest,
 ) -> Any | HTTPValidationError | None:
-    """Delete Filtering Job Not Supported
+    """Submit a v2 MOS analysis job
+
+     Submit a v2 MOS analysis job (§7.3).
+
+    Accepts FileStore or HF dataset. Validates against the `mos`
+    service contract (§3.2.2). Adds a `mos` column to the scored
+    dataset — pass-through on shape.
+
+    The Modal backend is unchanged from the legacy endpoint
+    (`remote/mos.py::MOS.run`); only the
+    request envelope is v2-shaped (contract validation + FileStore
+    parquet resolution).
 
     Args:
-        job_id (str):
+        body (MOSAnalysisRequest): v2 MOS request — FileStore or HF dataset, contract-validated.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -103,20 +131,31 @@ def sync(
     """
 
     return sync_detailed(
-        job_id=job_id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: MOSAnalysisRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Delete Filtering Job Not Supported
+    """Submit a v2 MOS analysis job
+
+     Submit a v2 MOS analysis job (§7.3).
+
+    Accepts FileStore or HF dataset. Validates against the `mos`
+    service contract (§3.2.2). Adds a `mos` column to the scored
+    dataset — pass-through on shape.
+
+    The Modal backend is unchanged from the legacy endpoint
+    (`remote/mos.py::MOS.run`); only the
+    request envelope is v2-shaped (contract validation + FileStore
+    parquet resolution).
 
     Args:
-        job_id (str):
+        body (MOSAnalysisRequest): v2 MOS request — FileStore or HF dataset, contract-validated.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -127,7 +166,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -136,14 +175,25 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: MOSAnalysisRequest,
 ) -> Any | HTTPValidationError | None:
-    """Delete Filtering Job Not Supported
+    """Submit a v2 MOS analysis job
+
+     Submit a v2 MOS analysis job (§7.3).
+
+    Accepts FileStore or HF dataset. Validates against the `mos`
+    service contract (§3.2.2). Adds a `mos` column to the scored
+    dataset — pass-through on shape.
+
+    The Modal backend is unchanged from the legacy endpoint
+    (`remote/mos.py::MOS.run`); only the
+    request envelope is v2-shaped (contract validation + FileStore
+    parquet resolution).
 
     Args:
-        job_id (str):
+        body (MOSAnalysisRequest): v2 MOS request — FileStore or HF dataset, contract-validated.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -155,7 +205,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            job_id=job_id,
             client=client,
+            body=body,
         )
     ).parsed

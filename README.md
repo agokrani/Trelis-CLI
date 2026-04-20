@@ -31,11 +31,6 @@ src/trelis_cli/                  hand-written CLI (Typer)
   └─ commands/                   resource sub-apps grouped by path prefix
 ```
 
-The upstream OpenAPI spec omits `securitySchemes` even though the API
-enforces `Authorization: Bearer ...`. We patch it in via `overlay.yaml`
-before codegen, and inject the bearer token in
-`AuthenticatedClient` at runtime.
-
 ## Quick start
 
 ```bash
@@ -77,3 +72,28 @@ make test      # pytest
 make lint      # ruff check + format
 make build     # wheel + sdist
 ```
+
+## Implementation notes
+
+### Why `overlay.yaml` exists
+
+The upstream OpenAPI spec at `https://studio.trelis.com/openapi.json`
+does not declare how the API is authenticated — it has no
+`components.securitySchemes` block and no top-level `security:`
+block — even though the live server requires
+`Authorization: Bearer tsk_...` on every call.
+
+If you point `openapi-python-client` at the raw spec, the generated
+SDK has no concept of auth: no `token=` parameter, no
+`AuthenticatedClient` class.
+
+`overlay.yaml` patches the missing `BearerAuth` scheme into the
+spec before codegen. `scripts/apply_overlay.py` applies the overlay
+and writes `build/openapi.merged.json`, which is the input to the
+generator. Result: the generated SDK produces
+`AuthenticatedClient(token=...)` and injects the bearer header
+automatically.
+
+If Trelis ever fixes the spec upstream, the overlay can be deleted
+and the generator re-run; nothing else in the CLI layer depends on
+its existence.

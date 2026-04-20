@@ -48,9 +48,11 @@ def sync_detailed(
 ) -> Response[Any]:
     """Get Credit Balance
 
-     Get current credit balance.
+     Get credit pool balance for the API key's project.
 
-    Returns the user's credit balance in USD.
+    The key is always project-scoped (falls back to the personal project
+    for legacy keys), so the returned balance is the pool that jobs run
+    under this key will debit.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -75,9 +77,11 @@ async def asyncio_detailed(
 ) -> Response[Any]:
     """Get Credit Balance
 
-     Get current credit balance.
+     Get credit pool balance for the API key's project.
 
-    Returns the user's credit balance in USD.
+    The key is always project-scoped (falls back to the personal project
+    for legacy keys), so the returned balance is the pool that jobs run
+    under this key will debit.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

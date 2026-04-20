@@ -74,6 +74,11 @@ def sync_detailed(
     Supported num_gpus: 4, 8.
     Returns immediately with job_id - poll GET /jobs/{job_id} for status.
 
+    Accepts both API-key (programmatic) and session-cookie (browser via
+    v2 dispatcher) auth. Project scoping via ``resolve_project_scope``
+    mirrors the single-GPU ``start_tts_training`` handler so multi-project
+    users' active-project cookie is honoured on DDP submissions.
+
     Args:
         body (TTSTrainingDDPRequest): Request to start a TTS DDP training job.
 
@@ -109,6 +114,11 @@ def sync(
     Supported num_gpus: 4, 8.
     Returns immediately with job_id - poll GET /jobs/{job_id} for status.
 
+    Accepts both API-key (programmatic) and session-cookie (browser via
+    v2 dispatcher) auth. Project scoping via ``resolve_project_scope``
+    mirrors the single-GPU ``start_tts_training`` handler so multi-project
+    users' active-project cookie is honoured on DDP submissions.
+
     Args:
         body (TTSTrainingDDPRequest): Request to start a TTS DDP training job.
 
@@ -138,6 +148,11 @@ async def asyncio_detailed(
     Trains an Orpheus TTS model using LoRA + DDP on multiple H100 GPUs.
     Supported num_gpus: 4, 8.
     Returns immediately with job_id - poll GET /jobs/{job_id} for status.
+
+    Accepts both API-key (programmatic) and session-cookie (browser via
+    v2 dispatcher) auth. Project scoping via ``resolve_project_scope``
+    mirrors the single-GPU ``start_tts_training`` handler so multi-project
+    users' active-project cookie is honoured on DDP submissions.
 
     Args:
         body (TTSTrainingDDPRequest): Request to start a TTS DDP training job.
@@ -171,6 +186,11 @@ async def asyncio(
     Trains an Orpheus TTS model using LoRA + DDP on multiple H100 GPUs.
     Supported num_gpus: 4, 8.
     Returns immediately with job_id - poll GET /jobs/{job_id} for status.
+
+    Accepts both API-key (programmatic) and session-cookie (browser via
+    v2 dispatcher) auth. Project scoping via ``resolve_project_scope``
+    mirrors the single-GPU ``start_tts_training`` handler so multi-project
+    users' active-project cookie is honoured on DDP submissions.
 
     Args:
         body (TTSTrainingDDPRequest): Request to start a TTS DDP training job.

@@ -70,8 +70,11 @@ def sync_detailed(
 
      Download remote URL(s) (ZIP, TAR, or audio file) into a new or existing FileStore.
 
-    No session required. Returns a job_id to poll and a file_store_id that
-    will be populated once the download completes.
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
+
+    Returns a job_id to poll and a file_store_id that will be populated
+    once the download completes.
 
     Supported formats: ZIP, TAR/TAR.GZ/TAR.BZ2/TAR.XZ, single audio file.
 
@@ -110,8 +113,11 @@ def sync(
 
      Download remote URL(s) (ZIP, TAR, or audio file) into a new or existing FileStore.
 
-    No session required. Returns a job_id to poll and a file_store_id that
-    will be populated once the download completes.
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
+
+    Returns a job_id to poll and a file_store_id that will be populated
+    once the download completes.
 
     Supported formats: ZIP, TAR/TAR.GZ/TAR.BZ2/TAR.XZ, single audio file.
 
@@ -145,8 +151,11 @@ async def asyncio_detailed(
 
      Download remote URL(s) (ZIP, TAR, or audio file) into a new or existing FileStore.
 
-    No session required. Returns a job_id to poll and a file_store_id that
-    will be populated once the download completes.
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
+
+    Returns a job_id to poll and a file_store_id that will be populated
+    once the download completes.
 
     Supported formats: ZIP, TAR/TAR.GZ/TAR.BZ2/TAR.XZ, single audio file.
 
@@ -183,8 +192,11 @@ async def asyncio(
 
      Download remote URL(s) (ZIP, TAR, or audio file) into a new or existing FileStore.
 
-    No session required. Returns a job_id to poll and a file_store_id that
-    will be populated once the download completes.
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
+
+    Returns a job_id to poll and a file_store_id that will be populated
+    once the download completes.
 
     Supported formats: ZIP, TAR/TAR.GZ/TAR.BZ2/TAR.XZ, single audio file.
 

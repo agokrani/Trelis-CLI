@@ -26,15 +26,17 @@ class DatasetSpec:
         split (str | Unset): Dataset split to use, e.g. 'train'. Default: 'train'.
         config (None | str | Unset): Dataset config name, for datasets with multiple subsets (e.g. 'en_us' in
             google/fleurs).
-        weight (float | Unset): Sampling weight when training on multiple datasets. Higher weight = more samples from
-            this dataset. Default: 1.0.
+        samples_per_epoch (int | None | Unset): Number of samples to draw from this dataset per epoch (cap / sub-
+            sample). If unset, the full dataset is used once per epoch. Must be ≤ the dataset's row count — oversampling is
+            not supported. Requests exceeding the dataset size are rejected at the API layer (or clamped at train time for
+            FileStore/parquet inputs whose size is unknown upfront).
     """
 
     dataset_id: None | str | Unset = UNSET
     file_store_id: None | str | Unset = UNSET
     split: str | Unset = "train"
     config: None | str | Unset = UNSET
-    weight: float | Unset = 1.0
+    samples_per_epoch: int | None | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -58,7 +60,11 @@ class DatasetSpec:
         else:
             config = self.config
 
-        weight = self.weight
+        samples_per_epoch: int | None | Unset
+        if isinstance(self.samples_per_epoch, Unset):
+            samples_per_epoch = UNSET
+        else:
+            samples_per_epoch = self.samples_per_epoch
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -71,8 +77,8 @@ class DatasetSpec:
             field_dict["split"] = split
         if config is not UNSET:
             field_dict["config"] = config
-        if weight is not UNSET:
-            field_dict["weight"] = weight
+        if samples_per_epoch is not UNSET:
+            field_dict["samples_per_epoch"] = samples_per_epoch
 
         return field_dict
 
@@ -109,14 +115,21 @@ class DatasetSpec:
 
         config = _parse_config(d.pop("config", UNSET))
 
-        weight = d.pop("weight", UNSET)
+        def _parse_samples_per_epoch(data: object) -> int | None | Unset:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(int | None | Unset, data)
+
+        samples_per_epoch = _parse_samples_per_epoch(d.pop("samples_per_epoch", UNSET))
 
         dataset_spec = cls(
             dataset_id=dataset_id,
             file_store_id=file_store_id,
             split=split,
             config=config,
-            weight=weight,
+            samples_per_epoch=samples_per_epoch,
         )
 
         dataset_spec.additional_properties = d

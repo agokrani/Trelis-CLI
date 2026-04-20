@@ -71,8 +71,8 @@ def sync_detailed(
      Estimate cost for a job.
 
     Returns the estimated cost based on duration and job type.
-    GPU jobs (training, evaluation) use H100 pricing.
-    Data service jobs (data_prep, transcription) use different pricing.
+    GPU training uses H100 pricing. Data-service jobs (transcription,
+    synthesis, mos, data_prep) use the data-service rate.
 
     Args:
         body (EstimateRequest): Request to estimate cost.
@@ -106,8 +106,8 @@ def sync(
      Estimate cost for a job.
 
     Returns the estimated cost based on duration and job type.
-    GPU jobs (training, evaluation) use H100 pricing.
-    Data service jobs (data_prep, transcription) use different pricing.
+    GPU training uses H100 pricing. Data-service jobs (transcription,
+    synthesis, mos, data_prep) use the data-service rate.
 
     Args:
         body (EstimateRequest): Request to estimate cost.
@@ -136,8 +136,8 @@ async def asyncio_detailed(
      Estimate cost for a job.
 
     Returns the estimated cost based on duration and job type.
-    GPU jobs (training, evaluation) use H100 pricing.
-    Data service jobs (data_prep, transcription) use different pricing.
+    GPU training uses H100 pricing. Data-service jobs (transcription,
+    synthesis, mos, data_prep) use the data-service rate.
 
     Args:
         body (EstimateRequest): Request to estimate cost.
@@ -169,8 +169,8 @@ async def asyncio(
      Estimate cost for a job.
 
     Returns the estimated cost based on duration and job type.
-    GPU jobs (training, evaluation) use H100 pricing.
-    Data service jobs (data_prep, transcription) use different pricing.
+    GPU training uses H100 pricing. Data-service jobs (transcription,
+    synthesis, mos, data_prep) use the data-service rate.
 
     Args:
         body (EstimateRequest): Request to estimate cost.

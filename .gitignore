@@ -9,3 +9,4 @@ dist/
 .coverage
 .envrc
 .env
+tests/fixtures/phase_b/

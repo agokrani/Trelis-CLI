@@ -68,7 +68,10 @@ def sync_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Create File Store From Hf Dataset
 
-     Download a HuggingFace dataset directly into a new FileStore (no session needed).
+     Download a HuggingFace dataset directly into a new FileStore.
+
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
 
     Creates an S3-backed FileStore pre-populated with audio + transcript
     files from the dataset. Returns a `file_store_id` to pass to
@@ -105,7 +108,10 @@ def sync(
 ) -> Any | HTTPValidationError | None:
     """Create File Store From Hf Dataset
 
-     Download a HuggingFace dataset directly into a new FileStore (no session needed).
+     Download a HuggingFace dataset directly into a new FileStore.
+
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
 
     Creates an S3-backed FileStore pre-populated with audio + transcript
     files from the dataset. Returns a `file_store_id` to pass to
@@ -137,7 +143,10 @@ async def asyncio_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Create File Store From Hf Dataset
 
-     Download a HuggingFace dataset directly into a new FileStore (no session needed).
+     Download a HuggingFace dataset directly into a new FileStore.
+
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
 
     Creates an S3-backed FileStore pre-populated with audio + transcript
     files from the dataset. Returns a `file_store_id` to pass to
@@ -172,7 +181,10 @@ async def asyncio(
 ) -> Any | HTTPValidationError | None:
     """Create File Store From Hf Dataset
 
-     Download a HuggingFace dataset directly into a new FileStore (no session needed).
+     Download a HuggingFace dataset directly into a new FileStore.
+
+    Auth: API-key (``Authorization: Bearer tsk_…``) OR session cookie.
+    The UI calls this from ``data_prep.html``; API consumers use Bearer.
 
     Creates an S3-backed FileStore pre-populated with audio + transcript
     files from the dataset. Returns a `file_store_id` to pass to

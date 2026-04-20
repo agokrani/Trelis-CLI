@@ -12,8 +12,8 @@ from ... import errors
 def _get_kwargs() -> dict[str, Any]:
 
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": "/api/v1/projects",
+        "method": "post",
+        "url": "/api/v1/tts-evaluation/jobs",
     }
 
     return _kwargs
@@ -46,13 +46,12 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any]:
-    """List Projects
+    """Start Tts Evaluation Gone
 
-     List projects the caller is a member of.
-
-    Accepts session cookie or `tsk_` API key. API-key callers are scoped
-    to the single project their key belongs to; session callers see all
-    memberships.
+     Deleted in #685 decision B — use POST /api/v1/synthesis instead.
+    The v2 Synthesis service covers Orpheus / Piper / Chatterbox with
+    optional round-trip CER via ``asr_model_id``. Existing job rows
+    remain visible via the GET /jobs endpoints below.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -75,13 +74,12 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any]:
-    """List Projects
+    """Start Tts Evaluation Gone
 
-     List projects the caller is a member of.
-
-    Accepts session cookie or `tsk_` API key. API-key callers are scoped
-    to the single project their key belongs to; session callers see all
-    memberships.
+     Deleted in #685 decision B — use POST /api/v1/synthesis instead.
+    The v2 Synthesis service covers Orpheus / Piper / Chatterbox with
+    optional round-trip CER via ``asr_model_id``. Existing job rows
+    remain visible via the GET /jobs endpoints below.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

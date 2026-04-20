@@ -62,7 +62,7 @@ def sync_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Stop Synthesis Job
 
-     Stop a running synthesis job. Credits are charged for time used up to cancellation.
+     Stop a running synthesis job (or an auto-triggered hf_push child).
 
     Args:
         job_id (str):
@@ -93,7 +93,7 @@ def sync(
 ) -> Any | HTTPValidationError | None:
     """Stop Synthesis Job
 
-     Stop a running synthesis job. Credits are charged for time used up to cancellation.
+     Stop a running synthesis job (or an auto-triggered hf_push child).
 
     Args:
         job_id (str):
@@ -119,7 +119,7 @@ async def asyncio_detailed(
 ) -> Response[Any | HTTPValidationError]:
     """Stop Synthesis Job
 
-     Stop a running synthesis job. Credits are charged for time used up to cancellation.
+     Stop a running synthesis job (or an auto-triggered hf_push child).
 
     Args:
         job_id (str):
@@ -148,7 +148,7 @@ async def asyncio(
 ) -> Any | HTTPValidationError | None:
     """Stop Synthesis Job
 
-     Stop a running synthesis job. Credits are charged for time used up to cancellation.
+     Stop a running synthesis job (or an auto-triggered hf_push child).
 
     Args:
         job_id (str):

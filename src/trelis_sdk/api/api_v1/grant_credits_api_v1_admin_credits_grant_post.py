@@ -8,21 +8,27 @@ from ...client import AuthenticatedClient, Client
 from ...types import Response, UNSET
 from ... import errors
 
+from ...models.grant_credits_request import GrantCreditsRequest
 from ...models.http_validation_error import HTTPValidationError
 from typing import cast
 
 
 def _get_kwargs(
-    key_id: str,
+    *,
+    body: GrantCreditsRequest,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "delete",
-        "url": "/api/v1/keys/{key_id}".format(
-            key_id=quote(str(key_id), safe=""),
-        ),
+        "method": "post",
+        "url": "/api/v1/admin/credits/grant",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -56,18 +62,16 @@ def _build_response(
 
 
 def sync_detailed(
-    key_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: GrantCreditsRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Revoke Api Key
+    """Grant credits to a project (super-admin only)
 
-     Revoke an API key.
-
-    Revoked keys can no longer be used for authentication.
+     Top up any project's pool without going through Stripe.
 
     Args:
-        key_id (str):
+        body (GrantCreditsRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -78,7 +82,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        key_id=key_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -89,18 +93,16 @@ def sync_detailed(
 
 
 def sync(
-    key_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: GrantCreditsRequest,
 ) -> Any | HTTPValidationError | None:
-    """Revoke Api Key
+    """Grant credits to a project (super-admin only)
 
-     Revoke an API key.
-
-    Revoked keys can no longer be used for authentication.
+     Top up any project's pool without going through Stripe.
 
     Args:
-        key_id (str):
+        body (GrantCreditsRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -111,24 +113,22 @@ def sync(
     """
 
     return sync_detailed(
-        key_id=key_id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    key_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: GrantCreditsRequest,
 ) -> Response[Any | HTTPValidationError]:
-    """Revoke Api Key
+    """Grant credits to a project (super-admin only)
 
-     Revoke an API key.
-
-    Revoked keys can no longer be used for authentication.
+     Top up any project's pool without going through Stripe.
 
     Args:
-        key_id (str):
+        body (GrantCreditsRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -139,7 +139,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        key_id=key_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -148,18 +148,16 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    key_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: GrantCreditsRequest,
 ) -> Any | HTTPValidationError | None:
-    """Revoke Api Key
+    """Grant credits to a project (super-admin only)
 
-     Revoke an API key.
-
-    Revoked keys can no longer be used for authentication.
+     Top up any project's pool without going through Stripe.
 
     Args:
-        key_id (str):
+        body (GrantCreditsRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -171,7 +169,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            key_id=key_id,
             client=client,
+            body=body,
         )
     ).parsed

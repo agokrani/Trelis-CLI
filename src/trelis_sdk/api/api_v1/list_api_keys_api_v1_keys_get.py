@@ -76,8 +76,11 @@ def sync_detailed(
 
      List API keys for the current user.
 
-    If project_id is provided, only keys for that project are returned.
-    Full keys are never returned - only the prefix for identification.
+    Accepts session cookie or `tsk_` API key. When called with a `tsk_`
+    key, results are scoped to that key's project (a query `project_id`
+    outside that scope returns an empty list).
+
+    Full keys are never returned — only the prefix for identification.
 
     Args:
         project_id (None | str | Unset):
@@ -110,8 +113,11 @@ def sync(
 
      List API keys for the current user.
 
-    If project_id is provided, only keys for that project are returned.
-    Full keys are never returned - only the prefix for identification.
+    Accepts session cookie or `tsk_` API key. When called with a `tsk_`
+    key, results are scoped to that key's project (a query `project_id`
+    outside that scope returns an empty list).
+
+    Full keys are never returned — only the prefix for identification.
 
     Args:
         project_id (None | str | Unset):
@@ -139,8 +145,11 @@ async def asyncio_detailed(
 
      List API keys for the current user.
 
-    If project_id is provided, only keys for that project are returned.
-    Full keys are never returned - only the prefix for identification.
+    Accepts session cookie or `tsk_` API key. When called with a `tsk_`
+    key, results are scoped to that key's project (a query `project_id`
+    outside that scope returns an empty list).
+
+    Full keys are never returned — only the prefix for identification.
 
     Args:
         project_id (None | str | Unset):
@@ -171,8 +180,11 @@ async def asyncio(
 
      List API keys for the current user.
 
-    If project_id is provided, only keys for that project are returned.
-    Full keys are never returned - only the prefix for identification.
+    Accepts session cookie or `tsk_` API key. When called with a `tsk_`
+    key, results are scoped to that key's project (a query `project_id`
+    outside that scope returns an empty list).
+
+    Full keys are never returned — only the prefix for identification.
 
     Args:
         project_id (None | str | Unset):

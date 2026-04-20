@@ -8,21 +8,20 @@ from ...client import AuthenticatedClient, Client
 from ...types import Response, UNSET
 from ... import errors
 
-from ...models.create_key_request import CreateKeyRequest
+from ...models.create_user_request import CreateUserRequest
 from ...models.http_validation_error import HTTPValidationError
-from ...models.key_response import KeyResponse
 from typing import cast
 
 
 def _get_kwargs(
     *,
-    body: CreateKeyRequest,
+    body: CreateUserRequest,
 ) -> dict[str, Any]:
     headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
         "method": "post",
-        "url": "/api/v1/keys",
+        "url": "/api/v1/admin/users",
     }
 
     _kwargs["json"] = body.to_dict()
@@ -35,10 +34,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> HTTPValidationError | KeyResponse | None:
+) -> Any | HTTPValidationError | None:
     if response.status_code == 200:
-        response_200 = KeyResponse.from_dict(response.json())
-
+        response_200 = response.json()
         return response_200
 
     if response.status_code == 422:
@@ -54,7 +52,7 @@ def _parse_response(
 
 def _build_response(
     *, client: AuthenticatedClient | Client, response: httpx.Response
-) -> Response[HTTPValidationError | KeyResponse]:
+) -> Response[Any | HTTPValidationError]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -66,27 +64,25 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateKeyRequest,
-) -> Response[HTTPValidationError | KeyResponse]:
-    """Create Api Key
+    body: CreateUserRequest,
+) -> Response[Any | HTTPValidationError]:
+    """Create a user (super-admin only)
 
-     Create a new API key.
+     Create a new User + their default personal project. Idempotent on
+    email: if the user already exists, returns 409.
 
-    The full key is only returned once on creation - store it securely.
-    Keys use format: tsk_<32-byte-urlsafe-base64>
-
-    Optionally attach a W&B API key — training jobs using this API key will
-    use it instead of the user's account-level W&B token.
+    Optionally seeds the personal project with credits and/or adds the
+    user to an existing project as admin/member.
 
     Args:
-        body (CreateKeyRequest): Request to create a new API key.
+        body (CreateUserRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[HTTPValidationError | KeyResponse]
+        Response[Any | HTTPValidationError]
     """
 
     kwargs = _get_kwargs(
@@ -103,27 +99,25 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateKeyRequest,
-) -> HTTPValidationError | KeyResponse | None:
-    """Create Api Key
+    body: CreateUserRequest,
+) -> Any | HTTPValidationError | None:
+    """Create a user (super-admin only)
 
-     Create a new API key.
+     Create a new User + their default personal project. Idempotent on
+    email: if the user already exists, returns 409.
 
-    The full key is only returned once on creation - store it securely.
-    Keys use format: tsk_<32-byte-urlsafe-base64>
-
-    Optionally attach a W&B API key — training jobs using this API key will
-    use it instead of the user's account-level W&B token.
+    Optionally seeds the personal project with credits and/or adds the
+    user to an existing project as admin/member.
 
     Args:
-        body (CreateKeyRequest): Request to create a new API key.
+        body (CreateUserRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        HTTPValidationError | KeyResponse
+        Any | HTTPValidationError
     """
 
     return sync_detailed(
@@ -135,27 +129,25 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateKeyRequest,
-) -> Response[HTTPValidationError | KeyResponse]:
-    """Create Api Key
+    body: CreateUserRequest,
+) -> Response[Any | HTTPValidationError]:
+    """Create a user (super-admin only)
 
-     Create a new API key.
+     Create a new User + their default personal project. Idempotent on
+    email: if the user already exists, returns 409.
 
-    The full key is only returned once on creation - store it securely.
-    Keys use format: tsk_<32-byte-urlsafe-base64>
-
-    Optionally attach a W&B API key — training jobs using this API key will
-    use it instead of the user's account-level W&B token.
+    Optionally seeds the personal project with credits and/or adds the
+    user to an existing project as admin/member.
 
     Args:
-        body (CreateKeyRequest): Request to create a new API key.
+        body (CreateUserRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[HTTPValidationError | KeyResponse]
+        Response[Any | HTTPValidationError]
     """
 
     kwargs = _get_kwargs(
@@ -170,27 +162,25 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient | Client,
-    body: CreateKeyRequest,
-) -> HTTPValidationError | KeyResponse | None:
-    """Create Api Key
+    body: CreateUserRequest,
+) -> Any | HTTPValidationError | None:
+    """Create a user (super-admin only)
 
-     Create a new API key.
+     Create a new User + their default personal project. Idempotent on
+    email: if the user already exists, returns 409.
 
-    The full key is only returned once on creation - store it securely.
-    Keys use format: tsk_<32-byte-urlsafe-base64>
-
-    Optionally attach a W&B API key — training jobs using this API key will
-    use it instead of the user's account-level W&B token.
+    Optionally seeds the personal project with credits and/or adds the
+    user to an existing project as admin/member.
 
     Args:
-        body (CreateKeyRequest): Request to create a new API key.
+        body (CreateUserRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        HTTPValidationError | KeyResponse
+        Any | HTTPValidationError
     """
 
     return (

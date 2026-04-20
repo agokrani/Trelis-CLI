@@ -99,7 +99,8 @@ def sync_detailed(
         offset (int | Unset): Items to skip Default: 0.
         search (str | Unset): Filter by name (case-insensitive substring match) Default: ''.
         sort (str | Unset): Sort order: newest, oldest, name Default: 'newest'.
-        content_type (str | Unset): Filter by content type: 'model' or 'dataset' Default: ''.
+        content_type (str | Unset): Filter by v2 ContentType enum value or comma-separated list
+            (e.g. 'trained_model' or 'audio_text_pairs,generated_audio') Default: ''.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -145,7 +146,8 @@ def sync(
         offset (int | Unset): Items to skip Default: 0.
         search (str | Unset): Filter by name (case-insensitive substring match) Default: ''.
         sort (str | Unset): Sort order: newest, oldest, name Default: 'newest'.
-        content_type (str | Unset): Filter by content type: 'model' or 'dataset' Default: ''.
+        content_type (str | Unset): Filter by v2 ContentType enum value or comma-separated list
+            (e.g. 'trained_model' or 'audio_text_pairs,generated_audio') Default: ''.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -186,7 +188,8 @@ async def asyncio_detailed(
         offset (int | Unset): Items to skip Default: 0.
         search (str | Unset): Filter by name (case-insensitive substring match) Default: ''.
         sort (str | Unset): Sort order: newest, oldest, name Default: 'newest'.
-        content_type (str | Unset): Filter by content type: 'model' or 'dataset' Default: ''.
+        content_type (str | Unset): Filter by v2 ContentType enum value or comma-separated list
+            (e.g. 'trained_model' or 'audio_text_pairs,generated_audio') Default: ''.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -230,7 +233,8 @@ async def asyncio(
         offset (int | Unset): Items to skip Default: 0.
         search (str | Unset): Filter by name (case-insensitive substring match) Default: ''.
         sort (str | Unset): Sort order: newest, oldest, name Default: 'newest'.
-        content_type (str | Unset): Filter by content type: 'model' or 'dataset' Default: ''.
+        content_type (str | Unset): Filter by v2 ContentType enum value or comma-separated list
+            (e.g. 'trained_model' or 'audio_text_pairs,generated_audio') Default: ''.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

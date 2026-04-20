@@ -17,8 +17,8 @@ def _get_kwargs(
 ) -> dict[str, Any]:
 
     _kwargs: dict[str, Any] = {
-        "method": "post",
-        "url": "/api/v1/filtering/jobs/{job_id}/cancel".format(
+        "method": "get",
+        "url": "/api/v1/analysis/mos/jobs/{job_id}".format(
             job_id=quote(str(job_id), safe=""),
         ),
     }
@@ -60,11 +60,9 @@ def sync_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any | HTTPValidationError]:
-    """Stop Filtering Job
+    """Get V2 Mos Job
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     Poll a v2 MOS analysis job.
 
     Args:
         job_id (str):
@@ -93,11 +91,9 @@ def sync(
     *,
     client: AuthenticatedClient | Client,
 ) -> Any | HTTPValidationError | None:
-    """Stop Filtering Job
+    """Get V2 Mos Job
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     Poll a v2 MOS analysis job.
 
     Args:
         job_id (str):
@@ -121,11 +117,9 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient | Client,
 ) -> Response[Any | HTTPValidationError]:
-    """Stop Filtering Job
+    """Get V2 Mos Job
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     Poll a v2 MOS analysis job.
 
     Args:
         job_id (str):
@@ -152,11 +146,9 @@ async def asyncio(
     *,
     client: AuthenticatedClient | Client,
 ) -> Any | HTTPValidationError | None:
-    """Stop Filtering Job
+    """Get V2 Mos Job
 
-     Stop a running filtering job.
-
-    Billing is handled by the background task based on actual runtime.
+     Poll a v2 MOS analysis job.
 
     Args:
         job_id (str):

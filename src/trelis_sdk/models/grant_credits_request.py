@@ -12,53 +12,71 @@ from ..types import UNSET, Unset
 from typing import cast
 
 
-T = TypeVar("T", bound="UpdateProjectRequest")
+T = TypeVar("T", bound="GrantCreditsRequest")
 
 
 @_attrs_define
-class UpdateProjectRequest:
+class GrantCreditsRequest:
     """
     Attributes:
-        name (None | str | Unset):
+        project_id (str):
+        amount (float):
+        description (None | str | Unset):
     """
 
-    name: None | str | Unset = UNSET
+    project_id: str
+    amount: float
+    description: None | str | Unset = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        name: None | str | Unset
-        if isinstance(self.name, Unset):
-            name = UNSET
+        project_id = self.project_id
+
+        amount = self.amount
+
+        description: None | str | Unset
+        if isinstance(self.description, Unset):
+            description = UNSET
         else:
-            name = self.name
+            description = self.description
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update({})
-        if name is not UNSET:
-            field_dict["name"] = name
+        field_dict.update(
+            {
+                "project_id": project_id,
+                "amount": amount,
+            }
+        )
+        if description is not UNSET:
+            field_dict["description"] = description
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
+        project_id = d.pop("project_id")
 
-        def _parse_name(data: object) -> None | str | Unset:
+        amount = d.pop("amount")
+
+        def _parse_description(data: object) -> None | str | Unset:
             if data is None:
                 return data
             if isinstance(data, Unset):
                 return data
             return cast(None | str | Unset, data)
 
-        name = _parse_name(d.pop("name", UNSET))
+        description = _parse_description(d.pop("description", UNSET))
 
-        update_project_request = cls(
-            name=name,
+        grant_credits_request = cls(
+            project_id=project_id,
+            amount=amount,
+            description=description,
         )
 
-        update_project_request.additional_properties = d
-        return update_project_request
+        grant_credits_request.additional_properties = d
+        return grant_credits_request
 
     @property
     def additional_keys(self) -> list[str]:
