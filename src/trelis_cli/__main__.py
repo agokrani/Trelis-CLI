@@ -52,6 +52,11 @@ app.add_typer(keys_cmd.app, name="keys")
 app.add_typer(models_cmd.app, name="models")
 app.add_typer(projects_cmd.app, name="projects")
 
+# Job resources (10 sub-apps built from a shared factory).
+from .commands import jobs as jobs_cmd  # noqa: E402
+
+jobs_cmd.register_all(app)
+
 
 if __name__ == "__main__":
     app()
