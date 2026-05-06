@@ -38,6 +38,7 @@ def main(
 
 
 # Resource sub-apps.
+from .commands import asr as asr_cmd  # noqa: E402
 from .commands import auth as auth_cmd  # noqa: E402
 from .commands import billing as billing_cmd  # noqa: E402
 from .commands import file_stores as file_stores_cmd  # noqa: E402
@@ -46,6 +47,7 @@ from .commands import models as models_cmd  # noqa: E402
 from .commands import projects as projects_cmd  # noqa: E402
 
 app.add_typer(auth_cmd.app)
+app.add_typer(asr_cmd.app, name="asr")
 app.add_typer(billing_cmd.app, name="billing")
 app.add_typer(file_stores_cmd.app, name="file-stores")
 app.add_typer(keys_cmd.app, name="keys")

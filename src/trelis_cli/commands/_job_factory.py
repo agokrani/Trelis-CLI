@@ -59,21 +59,48 @@ def _submit_raw(client, path: str, payload: Any) -> Any:
             return json.loads(body)
         except json.JSONDecodeError:
             return body.decode("utf-8", errors="replace")
-    detail: str | None = None
-    try:
-        data = json.loads(body) if body else None
-        if isinstance(data, dict):
-            for key in ("detail", "message", "error"):
-                if isinstance(data.get(key), str):
-                    detail = data[key]
-                    break
-    except json.JSONDecodeError:
-        pass
+    detail = _extract_api_error_message(body)
     msg = detail or f"API returned {status}"
     if status in (401, 403):
         raise AuthError(msg)
     raise APIError(msg, status_code=status)
 
+
+def _extract_api_error_message(raw_body: bytes) -> str | None:
+    if not raw_body:
+        return None
+    try:
+        payload = json.loads(raw_body)
+    except json.JSONDecodeError:
+        return None
+
+    if not isinstance(payload, dict):
+        return None
+
+    detail = payload.get("detail")
+    if isinstance(detail, dict):
+        message = detail.get("message")
+        code = detail.get("code")
+        if isinstance(message, str) and isinstance(code, str):
+            return f"{code}: {message}"
+        if isinstance(message, str):
+            return message
+        if isinstance(code, str):
+            return code
+    if isinstance(detail, str):
+        return detail
+
+    for key in ("message", "error"):
+        value = payload.get(key)
+        if isinstance(value, str):
+            return value
+        if isinstance(value, (dict, list)):
+            try:
+                return json.dumps(value)
+            except (TypeError, ValueError):
+                return str(value)
+
+    return None
 
 def _make_submit(resource: JobResource):
     path = resource.submit_path

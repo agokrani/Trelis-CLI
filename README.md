@@ -37,8 +37,45 @@ src/trelis_cli/                  hand-written CLI (Typer)
 uv sync --extra dev
 uv pip install -e .
 make regen           # apply overlay + regenerate src/trelis_sdk
-uv run pytest        # 6 tests, all mocked
+uv run pytest        # mocked CLI tests
 uv run trelis --help
+```
+
+Example uploads:
+
+```bash
+uv run trelis file-stores upload-parquet ./dataset.parquet
+uv run trelis file-stores upload-folder ./my-audio-folder
+```
+
+## ASR workflows
+
+The workflow-oriented ASR surface sits on top of the low-level
+`file-stores`, `data-prep`, and `transcription` commands:
+
+```bash
+# Discover ASR models and whether they route through Trelis Router
+uv run trelis asr models list
+uv run trelis asr models list --engine router
+uv run trelis asr models show fireworks/whisper-v3
+
+# Upload raw audio/text pairs
+uv run trelis asr upload folder ./my-audio-folder --name my-raw-store
+
+# Prepare a raw file store into a dataset-shaped store
+uv run trelis asr prepare file-store <raw_store_id> --wait
+
+# Submit an ASR job directly (HF dataset / FileStore / parquet URLs)
+uv run trelis asr transcribe submit \
+  --model openai/whisper-small \
+  --language en \
+  --dataset-id Trelis/my-dataset \
+  --split train \
+  --wait
+
+# Inspect output and optionally push it to HF
+uv run trelis asr output show <job_id>
+uv run trelis asr output push-hf --job-id <job_id> --repo-id Trelis/my-output --wait
 ```
 
 ## Auth
