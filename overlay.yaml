@@ -1,0 +1,26 @@
+# OpenAPI overlay applied to openapi.json before SDK codegen.
+#
+# Why: the upstream Trelis Studio spec omits security metadata even though
+# the runtime API enforces `Authorization: Bearer <api-key>`. We patch the
+# missing pieces here so generated SDKs understand auth without requiring
+# us to fork or rewrite the upstream spec.
+#
+# Format: this is NOT the OpenAPI Overlay 1.0 spec format. It is a small
+# custom shape consumed by `scripts/apply_overlay.py`, which deep-merges
+# `patch` into openapi.json and writes `build/openapi.merged.json`.
+
+servers:
+  - url: https://studio.trelis.com
+    description: Production
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Trelis API key. Pass as `Authorization: Bearer <api-key>`.
+        Obtain a key from the Trelis Studio dashboard.
+
+security:
+  - BearerAuth: []
